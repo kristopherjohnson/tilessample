@@ -15,6 +15,7 @@
 		2899E5220DE3E06400AC0155 /* TilesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* TilesViewController.xib */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* TilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* TilesViewController.m */; };
+		4E3848A5111B7FB700E6AEFC /* CALayer+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3848A4111B7FB700E6AEFC /* CALayer+Additions.m */; };
 		4EC0B94F111A51BC00E604BD /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EC0B94E111A51BC00E604BD /* QuartzCore.framework */; };
 		4EC0B9F8111A5AF200E604BD /* Tile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EC0B9F7111A5AF200E604BD /* Tile.m */; };
 		4EC0BC7A111AEF5300E604BD /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EC0BC79111AEF5300E604BD /* Default.png */; };
@@ -33,6 +34,8 @@
 		28D7ACF70DDB3853001CB0EB /* TilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TilesViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Tiles_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tiles_Prefix.pch; sourceTree = "<group>"; };
+		4E3848A3111B7FB700E6AEFC /* CALayer+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+Additions.h"; sourceTree = "<group>"; };
+		4E3848A4111B7FB700E6AEFC /* CALayer+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+Additions.m"; sourceTree = "<group>"; };
 		4EC0B94E111A51BC00E604BD /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4EC0B9F6111A5AF200E604BD /* Tile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tile.h; sourceTree = "<group>"; };
 		4EC0B9F7111A5AF200E604BD /* Tile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tile.m; sourceTree = "<group>"; };
@@ -64,6 +67,8 @@
 				28D7ACF70DDB3853001CB0EB /* TilesViewController.m */,
 				4EC0B9F6111A5AF200E604BD /* Tile.h */,
 				4EC0B9F7111A5AF200E604BD /* Tile.m */,
+				4E3848A3111B7FB700E6AEFC /* CALayer+Additions.h */,
+				4E3848A4111B7FB700E6AEFC /* CALayer+Additions.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -178,6 +183,7 @@
 				1D3623260D0F684500981E51 /* TilesAppDelegate.m in Sources */,
 				28D7ACF80DDB3853001CB0EB /* TilesViewController.m in Sources */,
 				4EC0B9F8111A5AF200E604BD /* Tile.m in Sources */,
+				4E3848A5111B7FB700E6AEFC /* CALayer+Additions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

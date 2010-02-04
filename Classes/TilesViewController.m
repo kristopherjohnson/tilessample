@@ -8,10 +8,13 @@
 
 #import "TilesViewController.h"
 #import "Tile.h"
+#import <QuartzCore/QuartzCore.h>
+
 
 #define TILE_WIDTH  57
 #define TILE_HEIGHT 57
 #define TILE_MARGIN 18
+
 
 @interface TilesViewController ()
 - (void)createTiles;
@@ -72,40 +75,43 @@
     CALayer *hitLayer = [self layerForTouch:[touches anyObject]];
     if ([hitLayer isKindOfClass:[Tile class]]) {
         Tile *tile = (Tile*)hitLayer;
-        CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        opacityAnimation.autoreverses = YES;
-        opacityAnimation.toValue = [NSNumber numberWithFloat:0.5];
-        [tile addAnimation:opacityAnimation forKey:@"opacity"];
+        heldTile = tile;
         
-        CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-        scaleAnimation.autoreverses = YES;
-        scaleAnimation.toValue = [NSNumber numberWithFloat:1.2];
-        [tile addAnimation:scaleAnimation forKey:@"scale"];
+        [tile moveToFront];
+        
+        tile.opacity = 0.6;
+        [tile setValue:[NSNumber numberWithFloat:1.2] forKeyPath:@"transform.scale"];
     }
 }
 
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [touches anyObject];
-    CGPoint point = [touch locationInView:self.view];
-    
-    NSLog(@"touchesMoved at point %@", NSStringFromCGPoint(point));
+    if (heldTile) {
+        UITouch *touch = [touches anyObject];
+        UIView *view = self.view;
+        
+        CGPoint location = [touch locationInView:view];
+        
+        [CATransaction begin];
+        [CATransaction setValue:(id)kCFBooleanTrue
+                         forKey:kCATransactionDisableActions];
+        heldTile.position = location;
+        [CATransaction commit];
+    }
 }
 
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [touches anyObject];
-    CGPoint point = [touch locationInView:self.view];
-    
-    NSLog(@"touchesEnded at point %@", NSStringFromCGPoint(point));
+    if (heldTile) {
+        heldTile.opacity = 1.0;
+        [heldTile setValue:[NSNumber numberWithFloat:1.0] forKeyPath:@"transform.scale"];
+        heldTile = nil;
+    }
 }
 
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [touches anyObject];
-    CGPoint point = [touch locationInView:self.view];
-    
-    NSLog(@"touchesCancelled at point %@", NSStringFromCGPoint(point));
+    [self touchesEnded:touches withEvent:event];
 }
 
 

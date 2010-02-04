@@ -7,7 +7,11 @@
 //
 
 #import "TilesViewController.h"
-#import "QuartzCore/CALayer.h"
+#import "Tile.h"
+
+#define TILE_WIDTH  57
+#define TILE_HEIGHT 57
+#define TILE_MARGIN 18
 
 @interface TilesViewController ()
 - (void)createLayers;
@@ -27,19 +31,28 @@
     int row, col;
     for (row = 0; row < 6; ++row) {
         for (col = 0; col < 4; ++col) {
-            CALayer *layer = [CALayer layer];
-            layer.frame = CGRectMake(18 + (18 + 57) * col, 18 + (18 + 57) * row, 57, 57);
-            layer.backgroundColor = [UIColor blueColor].CGColor;
-            layer.delegate = self;
-            layer.cornerRadius = 8;
-            [self.view.layer addSublayer:layer];
-            [layer setNeedsDisplay];
-            [layer release];
+            Tile *tile = [[Tile alloc] init];
+            tile.tileIndex = (row * 4) + col;
+            tile.frame = CGRectMake(TILE_MARGIN + col * (TILE_MARGIN + TILE_WIDTH),
+                                     TILE_MARGIN + row * (TILE_MARGIN + TILE_HEIGHT),
+                                     TILE_WIDTH, TILE_HEIGHT);
+            tile.backgroundColor = [UIColor blueColor].CGColor;
+            tile.delegate = self;
+            tile.cornerRadius = 8;
+            [self.view.layer addSublayer:tile];
+            [tile setNeedsDisplay];
+            [tile release];
         }
     }
 }
 
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
+    UIGraphicsPushContext(ctx);
+    
+    Tile *tile = (Tile *)layer;
+    [tile draw];
+    
+    UIGraphicsPopContext();
 }
 
 /*

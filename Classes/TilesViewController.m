@@ -78,9 +78,7 @@
         heldTile = tile;
         
         [tile moveToFront];
-        
-        tile.opacity = 0.6;
-        [tile setValue:[NSNumber numberWithFloat:1.2] forKeyPath:@"transform.scale"];
+        [tile appearDraggable];
     }
 }
 
@@ -93,8 +91,7 @@
         CGPoint location = [touch locationInView:view];
         
         [CATransaction begin];
-        [CATransaction setValue:(id)kCFBooleanTrue
-                         forKey:kCATransactionDisableActions];
+        [CATransaction setDisableActions:TRUE];
         heldTile.position = location;
         [CATransaction commit];
     }
@@ -103,8 +100,7 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     if (heldTile) {
-        heldTile.opacity = 1.0;
-        [heldTile setValue:[NSNumber numberWithFloat:1.0] forKeyPath:@"transform.scale"];
+        [heldTile appearNormal];
         heldTile = nil;
     }
 }

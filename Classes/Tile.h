@@ -18,4 +18,8 @@
 
 - (void)draw;
 
+- (void)appearDraggable;
+
+- (void)appearNormal;
+
 @end

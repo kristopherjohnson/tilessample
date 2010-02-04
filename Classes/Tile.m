@@ -36,4 +36,16 @@
 }
 
 
+- (void)appearDraggable {    
+    self.opacity = 0.6;
+    [self setValue:[NSNumber numberWithFloat:1.2] forKeyPath:@"transform.scale"];
+}
+
+
+- (void)appearNormal {
+    self.opacity = 1.0;
+    [self setValue:[NSNumber numberWithFloat:1.0] forKeyPath:@"transform.scale"];
+}
+
+
 @end

@@ -7,10 +7,40 @@
 //
 
 #import "TilesViewController.h"
+#import "QuartzCore/CALayer.h"
+
+@interface TilesViewController ()
+- (void)createLayers;
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+@end
+
 
 @implementation TilesViewController
 
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self createLayers];
+}
+
+- (void)createLayers {
+    int row, col;
+    for (row = 0; row < 6; ++row) {
+        for (col = 0; col < 4; ++col) {
+            CALayer *layer = [CALayer layer];
+            layer.frame = CGRectMake(18 + (18 + 57) * col, 18 + (18 + 57) * row, 57, 57);
+            layer.backgroundColor = [UIColor blueColor].CGColor;
+            layer.delegate = self;
+            layer.cornerRadius = 8;
+            [self.view.layer addSublayer:layer];
+            [layer setNeedsDisplay];
+            [layer release];
+        }
+    }
+}
+
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
+}
 
 /*
 // The designated initializer. Override to perform setup that is required before the view is loaded.

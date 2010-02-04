@@ -40,9 +40,9 @@
 
 - (void)createTiles {
     int row, col;
-    for (row = 0; row < 6; ++row) {
-        for (col = 0; col < 4; ++col) {
-            int index = (row * 4) + col;
+    for (row = 0; row < TILE_ROWS; ++row) {
+        for (col = 0; col < TILE_COLUMNS; ++col) {
+            int index = (row * TILE_COLUMNS) + col;
             
             tileFrame[index] = CGRectMake(TILE_MARGIN + col * (TILE_MARGIN + TILE_WIDTH),
                                           TILE_MARGIN + row * (TILE_MARGIN + TILE_HEIGHT),
@@ -77,6 +77,9 @@
         Tile *tile = (Tile*)hitLayer;
         heldTile = tile;
         
+        touchStartLocation = [[touches anyObject] locationInView:self.view];
+        heldTileStartPosition = tile.position;
+        
         [tile moveToFront];
         [tile appearDraggable];
     }
@@ -90,9 +93,13 @@
         
         CGPoint location = [touch locationInView:view];
         
+        float dx = location.x - touchStartLocation.x;
+        float dy = location.y - touchStartLocation.y;
+        CGPoint newPosition = CGPointMake(heldTileStartPosition.x + dx, heldTileStartPosition.y + dy);
+        
         [CATransaction begin];
         [CATransaction setDisableActions:TRUE];
-        heldTile.position = location;
+        heldTile.position = newPosition;
         [CATransaction commit];
     }
 }

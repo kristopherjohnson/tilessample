@@ -82,7 +82,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources-iPhone */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				4EC0B94E111A51BC00E604BD /* QuartzCore.framework */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -109,6 +108,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4EC0B94E111A51BC00E604BD /* QuartzCore.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765A40DF7441C002DB57D /* CoreGraphics.framework */,

@@ -14,7 +14,7 @@
 #define TILE_MARGIN 18
 
 @interface TilesViewController ()
-- (void)createLayers;
+- (void)createTiles;
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
 @end
 
@@ -22,12 +22,7 @@
 @implementation TilesViewController
 
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self createLayers];
-}
-
-- (void)createLayers {
+- (void)createTiles {
     int row, col;
     for (row = 0; row < 6; ++row) {
         for (col = 0; col < 4; ++col) {
@@ -72,12 +67,10 @@
 */
 
 
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self createTiles];
 }
-*/
 
 
 /*

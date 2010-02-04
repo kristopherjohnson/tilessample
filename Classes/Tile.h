@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QuartzCore/CALayer.h"
+#import "QuartzCore/QuartzCore.h"
 
 
 @interface Tile : CALayer {

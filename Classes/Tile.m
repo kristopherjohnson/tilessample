@@ -13,12 +13,18 @@
 
 @synthesize tileIndex;
 
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<Tile #%d>", (int)tileIndex];
+}
+
+
 - (void)draw {
     
     [[UIColor whiteColor] set];    
     UIFont *font = [UIFont boldSystemFontOfSize:36];
     
-    NSString *s = [NSString stringWithFormat:@"%d", (int)tileIndex + 1];
+    NSString *s = [NSString stringWithFormat:@"%d", (int)tileIndex];
     
     CGSize size = [s sizeWithFont:font];
     CGRect tileBounds = self.bounds;
@@ -28,5 +34,6 @@
                                    size.width, size.height);
     [s drawInRect:textBounds withFont:font];    
 }
+
 
 @end

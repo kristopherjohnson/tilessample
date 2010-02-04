@@ -16,21 +16,38 @@
 @interface TilesViewController ()
 - (void)createTiles;
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+- (CALayer *)layerForTouch:(UITouch *)touch;
 @end
 
 
 @implementation TilesViewController
 
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self createTiles];
+}
+
+
+- (void)viewDidUnload {
+	// Release any retained subviews of the main view.
+	// e.g. self.myOutlet = nil;
+}
+
+
 - (void)createTiles {
     int row, col;
     for (row = 0; row < 6; ++row) {
         for (col = 0; col < 4; ++col) {
+            int index = (row * 4) + col;
+            
+            tileFrame[index] = CGRectMake(TILE_MARGIN + col * (TILE_MARGIN + TILE_WIDTH),
+                                          TILE_MARGIN + row * (TILE_MARGIN + TILE_HEIGHT),
+                                          TILE_WIDTH, TILE_HEIGHT);
+            
             Tile *tile = [[Tile alloc] init];
-            tile.tileIndex = (row * 4) + col;
-            tile.frame = CGRectMake(TILE_MARGIN + col * (TILE_MARGIN + TILE_WIDTH),
-                                     TILE_MARGIN + row * (TILE_MARGIN + TILE_HEIGHT),
-                                     TILE_WIDTH, TILE_HEIGHT);
+            tile.tileIndex = index;
+            tile.frame = tileFrame[index];
             tile.backgroundColor = [UIColor blueColor].CGColor;
             tile.delegate = self;
             tile.cornerRadius = 8;
@@ -50,52 +67,61 @@
     UIGraphicsPopContext();
 }
 
-/*
-// The designated initializer. Override to perform setup that is required before the view is loaded.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        // Custom initialization
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    CALayer *hitLayer = [self layerForTouch:[touches anyObject]];
+    if ([hitLayer isKindOfClass:[Tile class]]) {
+        Tile *tile = (Tile*)hitLayer;
+        CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        opacityAnimation.autoreverses = YES;
+        opacityAnimation.toValue = [NSNumber numberWithFloat:0.5];
+        [tile addAnimation:opacityAnimation forKey:@"opacity"];
+        
+        CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        scaleAnimation.autoreverses = YES;
+        scaleAnimation.toValue = [NSNumber numberWithFloat:1.2];
+        [tile addAnimation:scaleAnimation forKey:@"scale"];
     }
-    return self;
-}
-*/
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {
-}
-*/
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self createTiles];
 }
 
 
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-	
-	// Release any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint point = [touch locationInView:self.view];
+    
+    NSLog(@"touchesMoved at point %@", NSStringFromCGPoint(point));
 }
 
 
-- (void)dealloc {
-    [super dealloc];
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint point = [touch locationInView:self.view];
+    
+    NSLog(@"touchesEnded at point %@", NSStringFromCGPoint(point));
 }
+
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint point = [touch locationInView:self.view];
+    
+    NSLog(@"touchesCancelled at point %@", NSStringFromCGPoint(point));
+}
+
+
+- (CALayer *)layerForTouch:(UITouch *)touch {
+    UIView *view = self.view;
+    
+    CGPoint location = [touch locationInView:view];
+    location = [view convertPoint:location toView:nil];
+    
+    CALayer *hitPresentationLayer = [view.layer.presentationLayer hitTest:location];
+    if (hitPresentationLayer) {
+        return hitPresentationLayer.modelLayer;
+    }
+    
+    return nil;
+}
+
 
 @end

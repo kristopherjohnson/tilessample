@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface TilesViewController : UIViewController {
-
+@private
+    CGRect tileFrame[4*6];
 }
 
 @end

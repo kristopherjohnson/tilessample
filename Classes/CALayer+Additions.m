@@ -32,10 +32,10 @@
     };
     
     CGColorSpaceRef rgbColorspace = CGColorSpaceCreateDeviceRGB();
-    CGColorSpaceRef glossGradient = CGGradientCreateWithColorComponents(rgbColorspace,
-                                                                        components,
-                                                                        locations,
-                                                                        num_locations);
+    CGGradientRef glossGradient = CGGradientCreateWithColorComponents(rgbColorspace,
+                                                                      components,
+                                                                      locations,
+                                                                      num_locations);
     
     CGRect currentBounds = self.bounds;
     CGPoint topCenter = CGPointMake(CGRectGetMidX(currentBounds), 0.0f);

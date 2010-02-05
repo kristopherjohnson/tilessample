@@ -23,6 +23,8 @@
 - (Tile *)tileForFrameIndex:(int)frameIndex;
 - (int)frameIndexForTileIndex:(int)tileIndex;
 - (int)indexOfClosestFrameToPoint:(CGPoint)point;
+- (void)moveHeldTileToPoint:(CGPoint)location;
+- (void)moveUnheldTilesAwayFromPoint:(CGPoint)location;
 @end
 
 
@@ -57,14 +59,15 @@
         for (int col = 0; col < TILE_COLUMNS; ++col) {
             int index = (row * TILE_COLUMNS) + col;
             
-            tileFrame[index] = CGRectMake(TILE_MARGIN + col * (TILE_MARGIN + TILE_WIDTH),
-                                          TILE_MARGIN + row * (TILE_MARGIN + TILE_HEIGHT),
-                                          TILE_WIDTH, TILE_HEIGHT);
+            CGRect frame = CGRectMake(TILE_MARGIN + col * (TILE_MARGIN + TILE_WIDTH),
+                                      TILE_MARGIN + row * (TILE_MARGIN + TILE_HEIGHT),
+                                      TILE_WIDTH, TILE_HEIGHT);
+            tileFrame[index] = frame;
             
             Tile *tile = [[Tile alloc] init];
             tile.tileIndex = index;
             tileForFrame[index] = tile;
-            tile.frame = tileFrame[index];
+            tile.frame = frame;
             tile.backgroundColor = colors[index % colorCount].CGColor;
             tile.delegate = self;
             tile.cornerRadius = 8;
@@ -105,27 +108,35 @@
     if (heldTile) {
         UITouch *touch = [touches anyObject];
         UIView *view = self.view;
-        
         CGPoint location = [touch locationInView:view];
+        [self moveHeldTileToPoint:location];
+        [self moveUnheldTilesAwayFromPoint:location];
+    }
+}
+
+
+- (void)moveHeldTileToPoint:(CGPoint)location {
+    float dx = location.x - touchStartLocation.x;
+    float dy = location.y - touchStartLocation.y;
+    CGPoint newPosition = CGPointMake(heldTileStartPosition.x + dx, heldTileStartPosition.y + dy);
+    
+    [CATransaction begin];
+    [CATransaction setDisableActions:TRUE];
+    heldTile.position = newPosition;
+    [CATransaction commit];
+    
+}
+
+
+- (void)moveUnheldTilesAwayFromPoint:(CGPoint)location {
+    int frameIndex = [self indexOfClosestFrameToPoint:location];
+    if (frameIndex != heldTileFrameIndex) {
+        Tile *movingTile = tileForFrame[frameIndex];
+        movingTile.frame = tileFrame[heldTileFrameIndex];
+        tileForFrame[heldTileFrameIndex] = movingTile;
         
-        float dx = location.x - touchStartLocation.x;
-        float dy = location.y - touchStartLocation.y;
-        CGPoint newPosition = CGPointMake(heldTileStartPosition.x + dx, heldTileStartPosition.y + dy);
-        
-        [CATransaction begin];
-        [CATransaction setDisableActions:TRUE];
-        heldTile.position = newPosition;
-        [CATransaction commit];
-        
-        int frameIndex = [self indexOfClosestFrameToPoint:location];
-        if (frameIndex != heldTileFrameIndex) {
-            Tile *movingTile = tileForFrame[frameIndex];
-            movingTile.frame = tileFrame[heldTileFrameIndex];
-            tileForFrame[heldTileFrameIndex] = movingTile;
-            
-            heldTileFrameIndex = frameIndex;
-            tileForFrame[heldTileFrameIndex] = heldTile;
-        }
+        heldTileFrameIndex = frameIndex;
+        tileForFrame[heldTileFrameIndex] = heldTile;
     }
 }
 

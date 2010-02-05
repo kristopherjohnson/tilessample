@@ -22,6 +22,7 @@
 - (CALayer *)layerForTouch:(UITouch *)touch;
 - (Tile *)tileForFrameIndex:(int)frameIndex;
 - (int)frameIndexForTileIndex:(int)tileIndex;
+- (int)indexOfClosestFrameToPoint:(CGPoint)point;
 @end
 
 
@@ -115,6 +116,16 @@
         [CATransaction setDisableActions:TRUE];
         heldTile.position = newPosition;
         [CATransaction commit];
+        
+        int frameIndex = [self indexOfClosestFrameToPoint:location];
+        if (frameIndex != heldTileFrameIndex) {
+            Tile *movingTile = tileForFrame[frameIndex];
+            movingTile.frame = tileFrame[heldTileFrameIndex];
+            tileForFrame[heldTileFrameIndex] = movingTile;
+            
+            heldTileFrameIndex = frameIndex;
+            tileForFrame[heldTileFrameIndex] = heldTile;
+        }
     }
 }
 
@@ -160,6 +171,27 @@
         }
     }
     return 0;
+}
+
+
+- (int)indexOfClosestFrameToPoint:(CGPoint)point {
+    int index = 0;
+    float minDist = FLT_MAX;
+    for (int i = 0; i < TILE_COUNT; ++i) {
+        CGRect frame = tileFrame[i];
+        float frameCenterX = frame.origin.x + frame.size.width / 2;
+        float frameCenterY = frame.origin.y + frame.size.height / 2;
+        
+        float dx = point.x - frameCenterX;
+        float dy = point.y - frameCenterY;
+        
+        float dist = (dx * dx) + (dy * dy);
+        if (dist < minDist) {
+            index = i;
+            minDist = dist;
+        }
+    }
+    return index;
 }
 
 

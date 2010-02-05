@@ -18,6 +18,7 @@
 @private
     CGRect   tileFrame[TILE_COUNT];
     Tile    *tileForFrame[TILE_COUNT];
+    
     Tile    *heldTile;
     int      heldTileFrameIndex;
     CGPoint  heldTileStartPosition;

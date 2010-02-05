@@ -26,12 +26,14 @@
     [[UIColor whiteColor] set];    
     UIFont *font = [UIFont boldSystemFontOfSize:36];
     [s drawCenteredInRect:self.bounds withFont:font];
+    
+    [self drawGlossGradient];
 }
 
 
 - (void)appearDraggable {    
     self.opacity = 0.6;
-    [self setValue:[NSNumber numberWithFloat:1.2] forKeyPath:@"transform.scale"];
+    [self setValue:[NSNumber numberWithFloat:1.25] forKeyPath:@"transform.scale"];
 }
 
 

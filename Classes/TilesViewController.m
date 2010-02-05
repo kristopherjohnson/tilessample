@@ -37,12 +37,6 @@
 }
 
 
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-}
-
-
 - (void)createTiles {
     UIColor *colors[] = {
         [UIColor blueColor],
@@ -69,8 +63,9 @@
             tileForFrame[index] = tile;
             tile.frame = frame;
             tile.backgroundColor = colors[index % colorCount].CGColor;
-            tile.delegate = self;
             tile.cornerRadius = 8;
+            tile.masksToBounds = YES;
+            tile.delegate = self;
             [self.view.layer addSublayer:tile];
             [tile setNeedsDisplay];
             [tile release];

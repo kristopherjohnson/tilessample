@@ -20,6 +20,8 @@
 - (void)createTiles;
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
 - (CALayer *)layerForTouch:(UITouch *)touch;
+- (Tile *)tileForFrameIndex:(int)frameIndex;
+- (int)frameIndexForTileIndex:(int)tileIndex;
 @end
 
 
@@ -60,6 +62,7 @@
             
             Tile *tile = [[Tile alloc] init];
             tile.tileIndex = index;
+            tileForFrame[index] = tile;
             tile.frame = tileFrame[index];
             tile.backgroundColor = colors[index % colorCount].CGColor;
             tile.delegate = self;
@@ -89,6 +92,7 @@
         
         touchStartLocation = [[touches anyObject] locationInView:self.view];
         heldTileStartPosition = tile.position;
+        heldTileFrameIndex = [self frameIndexForTileIndex:tile.tileIndex];
         
         [tile moveToFront];
         [tile appearDraggable];
@@ -118,6 +122,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     if (heldTile) {
         [heldTile appearNormal];
+        heldTile.frame = tileFrame[heldTileFrameIndex];
         heldTile = nil;
     }
 }
@@ -140,6 +145,21 @@
     }
     
     return nil;
+}
+
+
+- (Tile *)tileForFrameIndex:(int)frameIndex {
+    return tileForFrame[frameIndex];
+}
+
+
+- (int)frameIndexForTileIndex:(int)tileIndex {
+    for (int i = 0; i < TILE_COUNT; ++i) {
+        if (tileForFrame[i].tileIndex == tileIndex) {
+            return i;
+        }
+    }
+    return 0;
 }
 
 

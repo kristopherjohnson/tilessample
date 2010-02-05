@@ -17,9 +17,11 @@
 @interface TilesViewController : UIViewController {
 @private
     CGRect   tileFrame[TILE_COUNT];
+    Tile    *tileForFrame[TILE_COUNT];
     Tile    *heldTile;
-    CGPoint  touchStartLocation;
+    int      heldTileFrameIndex;
     CGPoint  heldTileStartPosition;
+    CGPoint  touchStartLocation;
 }
 
 @end

@@ -11,10 +11,10 @@
 
 
 @interface Tile : CALayer {
-    NSInteger tileIndex;    
+    int tileIndex;    
 }
 
-@property (nonatomic) NSInteger tileIndex;
+@property (nonatomic) int tileIndex;
 
 - (void)draw;
 

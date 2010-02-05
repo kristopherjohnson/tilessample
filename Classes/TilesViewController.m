@@ -39,9 +39,19 @@
 
 
 - (void)createTiles {
-    int row, col;
-    for (row = 0; row < TILE_ROWS; ++row) {
-        for (col = 0; col < TILE_COLUMNS; ++col) {
+    UIColor *colors[] = {
+        [UIColor blueColor],
+        [UIColor brownColor],
+        [UIColor grayColor],
+        [UIColor greenColor],
+        [UIColor orangeColor],
+        [UIColor purpleColor],
+        [UIColor redColor],
+    };
+    int colorCount = sizeof(colors) / sizeof(colors[0]);
+    
+    for (int row = 0; row < TILE_ROWS; ++row) {
+        for (int col = 0; col < TILE_COLUMNS; ++col) {
             int index = (row * TILE_COLUMNS) + col;
             
             tileFrame[index] = CGRectMake(TILE_MARGIN + col * (TILE_MARGIN + TILE_WIDTH),
@@ -51,7 +61,7 @@
             Tile *tile = [[Tile alloc] init];
             tile.tileIndex = index;
             tile.frame = tileFrame[index];
-            tile.backgroundColor = [UIColor blueColor].CGColor;
+            tile.backgroundColor = colors[index % colorCount].CGColor;
             tile.delegate = self;
             tile.cornerRadius = 8;
             [self.view.layer addSublayer:tile];

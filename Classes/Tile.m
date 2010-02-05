@@ -7,6 +7,7 @@
 //
 
 #import "Tile.h"
+#import "NSString+Additions.h"
 
 
 @implementation Tile
@@ -20,19 +21,11 @@
 
 
 - (void)draw {
-    
+    NSString *s = [NSString stringWithFormat:@"%d", (int)tileIndex];
+
     [[UIColor whiteColor] set];    
     UIFont *font = [UIFont boldSystemFontOfSize:36];
-    
-    NSString *s = [NSString stringWithFormat:@"%d", (int)tileIndex];
-    
-    CGSize size = [s sizeWithFont:font];
-    CGRect tileBounds = self.bounds;
-    
-    CGRect textBounds = CGRectMake(tileBounds.origin.x + (tileBounds.size.width - size.width) / 2,
-                                   tileBounds.origin.y + (tileBounds.size.height - size.height) / 2,
-                                   size.width, size.height);
-    [s drawInRect:textBounds withFont:font];    
+    [s drawCenteredInRect:self.bounds withFont:font];
 }
 
 

@@ -2,12 +2,10 @@
 //  Tile.m
 //  Tiles
 //
-//  Created by Kristopher Johnson on 2/3/10.
-//  Copyright 2010 Capable Hands Technologies, Inc. All rights reserved.
-//
 
 #import "Tile.h"
 #import "NSString+Additions.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface Tile ()
@@ -37,7 +35,7 @@
     CGColorRef color0 = CGColorCreate(colorSpace, colorComponents0);
     CGColorRef color1 = CGColorCreate(colorSpace, colorComponents1);
     NSArray *colors = [NSArray arrayWithObjects:(id)color0,
-                                                color1,
+                                                (id)color1,
                                                 nil];
     CGColorRelease(color0);
     CGColorRelease(color1);
@@ -70,6 +68,34 @@
 - (void)appearNormal {
     self.opacity = 1.0;
     [self setValue:[NSNumber numberWithFloat:1.0] forKeyPath:@"transform.scale"];
+}
+
+
+- (void)startWiggling {
+    CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation"];
+    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-0.05],
+                                            [NSNumber numberWithFloat:0.05],
+                                            nil];
+    anim.duration = 0.09f + ((tileIndex % 10) * 0.01f);
+    anim.autoreverses = YES;
+    anim.repeatCount = HUGE_VALF;
+    [self addAnimation:anim forKey:@"wiggleRotation"];
+    
+    anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.y"];
+    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-1],
+                   [NSNumber numberWithFloat:1],
+                   nil];
+    anim.duration = 0.07f + ((tileIndex % 10) * 0.01f);
+    anim.autoreverses = YES;
+    anim.repeatCount = HUGE_VALF;
+    anim.additive = YES;
+    [self addAnimation:anim forKey:@"wiggleTranslationY"];
+}
+
+
+- (void)stopWiggling {
+    [self removeAnimationForKey:@"wiggleRotation"];
+    [self removeAnimationForKey:@"wiggleTranslationY"];
 }
 
 

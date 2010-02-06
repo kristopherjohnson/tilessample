@@ -2,9 +2,6 @@
 //  TilesViewController.m
 //  Tiles
 //
-//  Created by Kristopher Johnson on 2/3/10.
-//  Copyright Capable Hands Technologies, Inc. 2010. All rights reserved.
-//
 
 #import "TilesViewController.h"
 #import "Tile.h"
@@ -24,6 +21,8 @@
 - (int)indexOfClosestFrameToPoint:(CGPoint)point;
 - (void)moveHeldTileToPoint:(CGPoint)location;
 - (void)moveUnheldTilesAwayFromPoint:(CGPoint)location;
+- (void)startTilesWiggling;
+- (void)stopTilesWiggling;
 @end
 
 
@@ -94,6 +93,7 @@
         
         [tile moveToFront];
         [tile appearDraggable];
+        [self startTilesWiggling];
     }
 }
 
@@ -118,7 +118,6 @@
     [CATransaction setDisableActions:TRUE];
     heldTile.position = newPosition;
     [CATransaction commit];
-    
 }
 
 
@@ -146,7 +145,6 @@
         
         [CATransaction commit];
     }
-
 }
 
 
@@ -156,6 +154,7 @@
         heldTile.frame = tileFrame[heldFrameIndex];
         heldTile = nil;
     }
+    [self stopTilesWiggling];
 }
 
 
@@ -205,6 +204,24 @@
         }
     }
     return index;
+}
+
+
+- (void)startTilesWiggling {
+    for (int i = 0; i < TILE_COUNT; ++i) {
+        Tile *tile = tileForFrame[i];
+        if (tile != heldTile) {
+            [tile startWiggling];
+        }
+    }
+}
+
+
+- (void)stopTilesWiggling {
+    for (int i = 0; i < TILE_COUNT; ++i) {
+        Tile *tile = tileForFrame[i];
+        [tile stopWiggling];
+    }
 }
 
 

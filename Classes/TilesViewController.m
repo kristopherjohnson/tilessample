@@ -37,7 +37,7 @@
 
 
 - (void)createTiles {
-    UIColor *colors[] = {
+    UIColor *tileColors[] = {
         [UIColor blueColor],
         [UIColor brownColor],
         [UIColor grayColor],
@@ -46,7 +46,7 @@
         [UIColor purpleColor],
         [UIColor redColor],
     };
-    int colorCount = sizeof(colors) / sizeof(colors[0]);
+    int tileColorCount = sizeof(tileColors) / sizeof(tileColors[0]);
     
     for (int row = 0; row < TILE_ROWS; ++row) {
         for (int col = 0; col < TILE_COLUMNS; ++col) {
@@ -61,9 +61,8 @@
             tile.tileIndex = index;
             tileForFrame[index] = tile;
             tile.frame = frame;
-            tile.backgroundColor = colors[index % colorCount].CGColor;
+            tile.backgroundColor = tileColors[index % tileColorCount].CGColor;
             tile.cornerRadius = 8;
-            tile.masksToBounds = YES;
             tile.delegate = self;
             [self.view.layer addSublayer:tile];
             [tile setNeedsDisplay];
@@ -71,6 +70,7 @@
         }
     }
 }
+
 
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
     UIGraphicsPushContext(ctx);
@@ -125,6 +125,8 @@
 - (void)moveUnheldTilesAwayFromPoint:(CGPoint)location {
     int frameIndex = [self indexOfClosestFrameToPoint:location];
     if (frameIndex != heldFrameIndex) {
+        [CATransaction begin];
+        
         if (frameIndex < heldFrameIndex) {
             for (int i = heldFrameIndex; i > frameIndex; --i) {
                 Tile *movingTile = tileForFrame[i-1];
@@ -141,6 +143,8 @@
         }
         heldFrameIndex = frameIndex;
         tileForFrame[heldFrameIndex] = heldTile;
+        
+        [CATransaction commit];
     }
 
 }

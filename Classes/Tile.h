@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <QuartzCore/CAGradientLayer.h>
 #import "CALayer+Additions.h"
 
 
-@interface Tile : CALayer {
+@interface Tile : CAGradientLayer {
     int tileIndex;    
 }
 

@@ -13,6 +13,4 @@
 
 - (void)moveToFront;
 
-- (void)drawGlossGradient;
-
 @end

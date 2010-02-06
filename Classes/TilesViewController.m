@@ -20,7 +20,6 @@
 - (void)createTiles;
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
 - (CALayer *)layerForTouch:(UITouch *)touch;
-- (Tile *)tileForFrameIndex:(int)frameIndex;
 - (int)frameIndexForTileIndex:(int)tileIndex;
 - (int)indexOfClosestFrameToPoint:(CGPoint)point;
 - (void)moveHeldTileToPoint:(CGPoint)location;
@@ -90,8 +89,8 @@
         heldTile = tile;
         
         touchStartLocation = [[touches anyObject] locationInView:self.view];
-        heldTileStartPosition = tile.position;
-        heldTileFrameIndex = [self frameIndexForTileIndex:tile.tileIndex];
+        heldStartPosition = tile.position;
+        heldFrameIndex = [self frameIndexForTileIndex:tile.tileIndex];
         
         [tile moveToFront];
         [tile appearDraggable];
@@ -113,7 +112,7 @@
 - (void)moveHeldTileToPoint:(CGPoint)location {
     float dx = location.x - touchStartLocation.x;
     float dy = location.y - touchStartLocation.y;
-    CGPoint newPosition = CGPointMake(heldTileStartPosition.x + dx, heldTileStartPosition.y + dy);
+    CGPoint newPosition = CGPointMake(heldStartPosition.x + dx, heldStartPosition.y + dy);
     
     [CATransaction begin];
     [CATransaction setDisableActions:TRUE];
@@ -125,21 +124,32 @@
 
 - (void)moveUnheldTilesAwayFromPoint:(CGPoint)location {
     int frameIndex = [self indexOfClosestFrameToPoint:location];
-    if (frameIndex != heldTileFrameIndex) {
-        Tile *movingTile = tileForFrame[frameIndex];
-        movingTile.frame = tileFrame[heldTileFrameIndex];
-        tileForFrame[heldTileFrameIndex] = movingTile;
-        
-        heldTileFrameIndex = frameIndex;
-        tileForFrame[heldTileFrameIndex] = heldTile;
+    if (frameIndex != heldFrameIndex) {
+        if (frameIndex < heldFrameIndex) {
+            for (int i = heldFrameIndex; i > frameIndex; --i) {
+                Tile *movingTile = tileForFrame[i-1];
+                movingTile.frame = tileFrame[i];
+                tileForFrame[i] = movingTile;
+            }
+        }
+        else if (heldFrameIndex < frameIndex) {
+            for (int i = heldFrameIndex; i < frameIndex; ++i) {
+                Tile *movingTile = tileForFrame[i+1];
+                movingTile.frame = tileFrame[i];
+                tileForFrame[i] = movingTile;
+            }
+        }
+        heldFrameIndex = frameIndex;
+        tileForFrame[heldFrameIndex] = heldTile;
     }
+
 }
 
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     if (heldTile) {
         [heldTile appearNormal];
-        heldTile.frame = tileFrame[heldTileFrameIndex];
+        heldTile.frame = tileFrame[heldFrameIndex];
         heldTile = nil;
     }
 }
@@ -165,11 +175,6 @@
 }
 
 
-- (Tile *)tileForFrameIndex:(int)frameIndex {
-    return tileForFrame[frameIndex];
-}
-
-
 - (int)frameIndexForTileIndex:(int)tileIndex {
     for (int i = 0; i < TILE_COUNT; ++i) {
         if (tileForFrame[i].tileIndex == tileIndex) {
@@ -185,11 +190,9 @@
     float minDist = FLT_MAX;
     for (int i = 0; i < TILE_COUNT; ++i) {
         CGRect frame = tileFrame[i];
-        float frameCenterX = frame.origin.x + frame.size.width / 2;
-        float frameCenterY = frame.origin.y + frame.size.height / 2;
         
-        float dx = point.x - frameCenterX;
-        float dy = point.y - frameCenterY;
+        float dx = point.x - CGRectGetMidX(frame);
+        float dy = point.y - CGRectGetMidY(frame);
         
         float dist = (dx * dx) + (dy * dy);
         if (dist < minDist) {

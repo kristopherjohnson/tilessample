@@ -20,8 +20,8 @@
     Tile    *tileForFrame[TILE_COUNT];
     
     Tile    *heldTile;
-    int      heldTileFrameIndex;
-    CGPoint  heldTileStartPosition;
+    int      heldFrameIndex;
+    CGPoint  heldStartPosition;
     CGPoint  touchStartLocation;
 }
 

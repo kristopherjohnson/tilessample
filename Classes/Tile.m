@@ -82,9 +82,9 @@
     [self addAnimation:anim forKey:@"wiggleRotation"];
     
     anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.y"];
-    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-1],
-                   [NSNumber numberWithFloat:1],
-                   nil];
+    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-1.0],
+                                            [NSNumber numberWithFloat:1.0],
+                                            nil];
     anim.duration = 0.07f + ((tileIndex % 10) * 0.01f);
     anim.autoreverses = YES;
     anim.repeatCount = HUGE_VALF;

@@ -74,8 +74,10 @@
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
     UIGraphicsPushContext(ctx);
     
-    Tile *tile = (Tile *)layer;
-    [tile draw];
+    if ([layer isKindOfClass:[Tile class]]) {
+        Tile *tile = (Tile *)layer;
+        [tile draw];
+    }
     
     UIGraphicsPopContext();
 }
@@ -115,7 +117,7 @@
     CGPoint newPosition = CGPointMake(heldStartPosition.x + dx, heldStartPosition.y + dy);
     
     [CATransaction begin];
-    [CATransaction setDisableActions:TRUE];
+    [CATransaction setDisableActions:YES];
     heldTile.position = newPosition;
     [CATransaction commit];
 }

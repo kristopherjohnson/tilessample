@@ -10,6 +10,8 @@
 
 @interface Tile ()
 - (void)setGlossGradientProperties;
+- (CAAnimation *)wiggleRotationAnimation;
+- (CAAnimation *)wiggleTranslationYAnimation;
 @end
 
 
@@ -72,30 +74,42 @@
 
 
 - (void)startWiggling {
-    CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation"];
-    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-0.05],
-                                            [NSNumber numberWithFloat:0.05],
-                                            nil];
-    anim.duration = 0.09f + ((tileIndex % 10) * 0.01f);
-    anim.autoreverses = YES;
-    anim.repeatCount = HUGE_VALF;
-    [self addAnimation:anim forKey:@"wiggleRotation"];
+    CAAnimation *rotationAnimation = [self wiggleRotationAnimation];
+    [self addAnimation:rotationAnimation forKey:@"wiggleRotation"];
     
-    anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.y"];
-    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-1.0],
-                                            [NSNumber numberWithFloat:1.0],
-                                            nil];
-    anim.duration = 0.07f + ((tileIndex % 10) * 0.01f);
-    anim.autoreverses = YES;
-    anim.repeatCount = HUGE_VALF;
-    anim.additive = YES;
-    [self addAnimation:anim forKey:@"wiggleTranslationY"];
+    CAAnimation *translationYAnimation = [self wiggleTranslationYAnimation];
+    [self addAnimation:translationYAnimation forKey:@"wiggleTranslationY"];
 }
 
 
 - (void)stopWiggling {
     [self removeAnimationForKey:@"wiggleRotation"];
     [self removeAnimationForKey:@"wiggleTranslationY"];
+}
+
+
+- (CAAnimation *)wiggleRotationAnimation {
+    CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation"];
+    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-0.05],
+                   [NSNumber numberWithFloat:0.05],
+                   nil];
+    anim.duration = 0.09f + ((tileIndex % 10) * 0.01f);
+    anim.autoreverses = YES;
+    anim.repeatCount = HUGE_VALF;
+    return anim;
+}
+
+
+- (CAAnimation *)wiggleTranslationYAnimation {
+    CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.y"];
+    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-1.0],
+                   [NSNumber numberWithFloat:1.0],
+                   nil];
+    anim.duration = 0.07f + ((tileIndex % 10) * 0.01f);
+    anim.autoreverses = YES;
+    anim.repeatCount = HUGE_VALF;
+    anim.additive = YES;
+    return anim;
 }
 
 

@@ -30,18 +30,11 @@
 
 
 - (void)setGlossGradientProperties {
-    static CGFloat colorComponents0[] = { 1.0, 1.0, 1.0, 0.35 };
-    static CGFloat colorComponents1[] = { 1.0, 1.0, 1.0, 0.06 };
-      
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGColorRef color0 = CGColorCreate(colorSpace, colorComponents0);
-    CGColorRef color1 = CGColorCreate(colorSpace, colorComponents1);
-    NSArray *colors = [NSArray arrayWithObjects:(id)color0,
-                                                (id)color1,
+    UIColor *colorTop = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.35f];
+    UIColor *colorMid = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.06f];    
+    NSArray *colors = [NSArray arrayWithObjects:(id)colorTop.CGColor,
+                                                (id)colorMid.CGColor,
                                                 nil];
-    CGColorRelease(color0);
-    CGColorRelease(color1);
-    CGColorSpaceRelease(colorSpace); 
     
     self.colors = colors;
     self.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0],
@@ -55,21 +48,21 @@
 - (void)draw {
     NSString *labelText = [NSString stringWithFormat:@"%d", (int)tileIndex];
 
-    UIFont *font = [UIFont boldSystemFontOfSize:36];
+    UIFont *font = [UIFont boldSystemFontOfSize:36.0f];
     [[UIColor whiteColor] set];    
     [labelText drawCenteredInRect:self.bounds withFont:font];
 }
 
 
 - (void)appearDraggable {
-    self.opacity = 0.6;
-    [self setValue:[NSNumber numberWithFloat:1.25] forKeyPath:@"transform.scale"];
+    self.opacity = 0.6f;
+    [self setValue:[NSNumber numberWithFloat:1.25f] forKeyPath:@"transform.scale"];
 }
 
 
 - (void)appearNormal {
-    self.opacity = 1.0;
-    [self setValue:[NSNumber numberWithFloat:1.0] forKeyPath:@"transform.scale"];
+    self.opacity = 1.0f;
+    [self setValue:[NSNumber numberWithFloat:1.0f] forKeyPath:@"transform.scale"];
 }
 
 
@@ -90,8 +83,8 @@
 
 - (CAAnimation *)wiggleRotationAnimation {
     CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation"];
-    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-0.05],
-                   [NSNumber numberWithFloat:0.05],
+    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-0.05f],
+                   [NSNumber numberWithFloat:0.05f],
                    nil];
     anim.duration = 0.09f + ((tileIndex % 10) * 0.01f);
     anim.autoreverses = YES;
@@ -102,8 +95,8 @@
 
 - (CAAnimation *)wiggleTranslationYAnimation {
     CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.y"];
-    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-1.0],
-                   [NSNumber numberWithFloat:1.0],
+    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-1.0f],
+                   [NSNumber numberWithFloat:1.0f],
                    nil];
     anim.duration = 0.07f + ((tileIndex % 10) * 0.01f);
     anim.autoreverses = YES;

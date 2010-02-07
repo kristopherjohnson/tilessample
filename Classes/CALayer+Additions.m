@@ -11,8 +11,10 @@
 
 - (void)moveToFront {
     CALayer *superlayer = self.superlayer;
+    [self retain];
     [self removeFromSuperlayer];
     [superlayer addSublayer:self];
+    [self release];
 }
 
 

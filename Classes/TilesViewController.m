@@ -9,25 +9,28 @@
 
 
 #define TILE_WIDTH  57
-#define TILE_HEIGHT 57
+#define TILE_HEIGHT TILE_WIDTH
 #define TILE_MARGIN 18
 
 
 @interface TilesViewController ()
 - (void)createTiles;
-- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
-- (void)touchBegan:(UITouch *)touch forTile:(Tile *)tile;
 - (CALayer *)layerForTouch:(UITouch *)touch;
+- (void)touchBegan:(UITouch *)touch forTile:(Tile *)tile;
 - (int)frameIndexForTileIndex:(int)tileIndex;
-- (int)indexOfClosestFrameToPoint:(CGPoint)point;
 - (void)moveHeldTileToPoint:(CGPoint)location;
 - (void)moveUnheldTilesAwayFromPoint:(CGPoint)location;
+- (int)indexOfClosestFrameToPoint:(CGPoint)point;
 - (void)startTilesWiggling;
 - (void)stopTilesWiggling;
 @end
 
 
 @implementation TilesViewController
+
+
+#pragma mark -
+#pragma mark Initialization
 
 
 - (void)viewDidLoad {
@@ -72,6 +75,10 @@
 }
 
 
+#pragma mark -
+#pragma mark Layer delegate methods
+
+
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
     if ([layer isKindOfClass:[Tile class]]) {
         Tile *tile = (Tile *)layer;
@@ -82,12 +89,31 @@
 }
 
 
+#pragma mark -
+#pragma mark touchesBegan
+
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CALayer *hitLayer = [self layerForTouch:touch];
     if ([hitLayer isKindOfClass:[Tile class]]) {
         [self touchBegan:touch forTile:(Tile*)hitLayer];
     }
+}
+
+
+- (CALayer *)layerForTouch:(UITouch *)touch {
+    UIView *view = self.view;
+    
+    CGPoint location = [touch locationInView:view];
+    location = [view convertPoint:location toView:nil];
+    
+    CALayer *hitPresentationLayer = [view.layer.presentationLayer hitTest:location];
+    if (hitPresentationLayer) {
+        return hitPresentationLayer.modelLayer;
+    }
+    
+    return nil;
 }
 
 
@@ -102,6 +128,20 @@
     [tile appearDraggable];
     [self startTilesWiggling];
 }
+
+
+- (int)frameIndexForTileIndex:(int)tileIndex {
+    for (int i = 0; i < TILE_COUNT; ++i) {
+        if (tileForFrame[i].tileIndex == tileIndex) {
+            return i;
+        }
+    }
+    return 0;
+}
+
+
+#pragma mark -
+#pragma mark touchesMoved
 
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -154,46 +194,6 @@
 }
 
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (heldTile) {
-        [heldTile appearNormal];
-        heldTile.frame = tileFrame[heldFrameIndex];
-        heldTile = nil;
-    }
-    [self stopTilesWiggling];
-}
-
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self touchesEnded:touches withEvent:event];
-}
-
-
-- (CALayer *)layerForTouch:(UITouch *)touch {
-    UIView *view = self.view;
-    
-    CGPoint location = [touch locationInView:view];
-    location = [view convertPoint:location toView:nil];
-    
-    CALayer *hitPresentationLayer = [view.layer.presentationLayer hitTest:location];
-    if (hitPresentationLayer) {
-        return hitPresentationLayer.modelLayer;
-    }
-    
-    return nil;
-}
-
-
-- (int)frameIndexForTileIndex:(int)tileIndex {
-    for (int i = 0; i < TILE_COUNT; ++i) {
-        if (tileForFrame[i].tileIndex == tileIndex) {
-            return i;
-        }
-    }
-    return 0;
-}
-
-
 - (int)indexOfClosestFrameToPoint:(CGPoint)point {
     int index = 0;
     float minDist = FLT_MAX;
@@ -211,6 +211,29 @@
     }
     return index;
 }
+
+
+#pragma mark -
+#pragma mark touchesEnded
+
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (heldTile) {
+        [heldTile appearNormal];
+        heldTile.frame = tileFrame[heldFrameIndex];
+        heldTile = nil;
+        [self stopTilesWiggling];
+    }
+}
+
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self touchesEnded:touches withEvent:event];
+}
+
+
+#pragma mark -
+#pragma mark Tile animation
 
 
 - (void)startTilesWiggling {

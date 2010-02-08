@@ -16,6 +16,7 @@
 @interface TilesViewController ()
 - (void)createTiles;
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+- (void)touchBegan:(UITouch *)touch forTile:(Tile *)tile;
 - (CALayer *)layerForTouch:(UITouch *)touch;
 - (int)frameIndexForTileIndex:(int)tileIndex;
 - (int)indexOfClosestFrameToPoint:(CGPoint)point;
@@ -72,31 +73,34 @@
 
 
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
-    UIGraphicsPushContext(ctx);
-    
     if ([layer isKindOfClass:[Tile class]]) {
         Tile *tile = (Tile *)layer;
+        UIGraphicsPushContext(ctx);
         [tile draw];
+        UIGraphicsPopContext();
     }
-    
-    UIGraphicsPopContext();
 }
 
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    CALayer *hitLayer = [self layerForTouch:[touches anyObject]];
+    UITouch *touch = [touches anyObject];
+    CALayer *hitLayer = [self layerForTouch:touch];
     if ([hitLayer isKindOfClass:[Tile class]]) {
-        Tile *tile = (Tile*)hitLayer;
-        heldTile = tile;
-        
-        touchStartLocation = [[touches anyObject] locationInView:self.view];
-        heldStartPosition = tile.position;
-        heldFrameIndex = [self frameIndexForTileIndex:tile.tileIndex];
-        
-        [tile moveToFront];
-        [tile appearDraggable];
-        [self startTilesWiggling];
+        [self touchBegan:touch forTile:(Tile*)hitLayer];
     }
+}
+
+
+- (void)touchBegan:(UITouch *)touch forTile:(Tile *)tile {
+    heldTile = tile;
+    
+    touchStartLocation = [touch locationInView:self.view];
+    heldStartPosition = tile.position;
+    heldFrameIndex = [self frameIndexForTileIndex:tile.tileIndex];
+    
+    [tile moveToFront];
+    [tile appearDraggable];
+    [self startTilesWiggling];
 }
 
 

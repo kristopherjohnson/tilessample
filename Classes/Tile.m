@@ -20,6 +20,10 @@
 @synthesize tileIndex;
 
 
+#pragma mark -
+#pragma mark Initialization
+
+
 - (id)init {
     self = [super init];
     if (self) {
@@ -58,6 +62,10 @@
 }
 
 
+#pragma mark -
+#pragma mark Drawing
+
+
 - (void)draw {
     NSString *labelText = [NSString stringWithFormat:@"%d", (int)tileIndex];
 
@@ -65,6 +73,10 @@
     [[UIColor whiteColor] set];    
     [labelText drawCenteredInRect:self.bounds withFont:font];
 }
+
+
+#pragma mark -
+#pragma mark Draggable animation
 
 
 - (void)appearDraggable {
@@ -77,6 +89,10 @@
     self.opacity = 1.0f;
     [self setValue:[NSNumber numberWithFloat:1.0f] forKeyPath:@"transform.scale"];
 }
+
+
+#pragma mark -
+#pragma mark Wiggle animation
 
 
 - (void)startWiggling {

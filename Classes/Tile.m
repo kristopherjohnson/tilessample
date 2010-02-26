@@ -36,29 +36,30 @@
 - (void)setGlossGradientProperties {
     static NSArray *colors = nil;
     if (colors == nil) {
-        UIColor *colorTop = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.35f];
-        UIColor *colorMid = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.06f];    
-        colors = [NSArray arrayWithObjects:(id)colorTop.CGColor,
-                                           (id)colorMid.CGColor,
-                                           nil];
+        colors = [NSArray arrayWithObjects:
+                  (id)[UIColor colorWithWhite:1.0f alpha:0.50f].CGColor,
+                  (id)[UIColor colorWithWhite:1.0f alpha:0.12f].CGColor,
+                  (id)[UIColor colorWithWhite:1.0f alpha:0.00f].CGColor,
+                  (id)[UIColor colorWithWhite:1.0f alpha:0.00f].CGColor,
+                  (id)[UIColor colorWithWhite:1.0f alpha:0.25f].CGColor,
+                  nil];
         [colors retain];
     }
     
     static NSArray *locations = nil;
     if (locations == nil) {
-        locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0],
-                                              [NSNumber numberWithFloat:1.0],
-                                              nil];
+        locations = [NSArray arrayWithObjects:
+                     [NSNumber numberWithFloat:0.0f],
+                     [NSNumber numberWithFloat:0.5f],
+                     [NSNumber numberWithFloat:0.5f],
+                     [NSNumber numberWithFloat:0.85f],
+                     [NSNumber numberWithFloat:1.0f],
+                     nil];
         [locations retain];
     }
     
-    static CGPoint startPoint = { 0.5f, 0.0f };
-    static CGPoint endPoint = { 0.5f, 0.5f };
-    
     self.colors = colors;
     self.locations = locations;
-    self.startPoint = startPoint;
-    self.endPoint = endPoint;
 }
 
 

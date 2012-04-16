@@ -67,6 +67,10 @@
             tile.backgroundColor = tileColors[index % tileColorCount].CGColor;
             tile.cornerRadius = 8;
             tile.delegate = self;
+            if ([tile respondsToSelector:@selector(setContentsScale:)])
+            {
+                tile.contentsScale = [[UIScreen mainScreen] scale];
+            }                    
             [self.view.layer addSublayer:tile];
             [tile setNeedsDisplay];
             [tile release];
